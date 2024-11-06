@@ -13,7 +13,7 @@ typedef struct Node {
 
 // Function prototypes
 Node *createNode(int label, int width, int height);
-Node *buildTree(FILE *inputFile);
+Node *buildTree(FILE *input);
 void preorderTraversal(Node *root, FILE *outputFile);
 void computeDimensions(Node *root);
 void writeDimensions(Node *root, FILE *outputFile);
@@ -27,8 +27,8 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    FILE *inputFile = fopen(argv[1], "r");
-    if (!inputFile) {
+    FILE *input = fopen(argv[1], "r");
+    if (!input) {
         return 1;
     }
 
@@ -36,12 +36,12 @@ int main(int argc, char *argv[]) {
     FILE *outputFile2 = fopen(argv[3], "w");
     FILE *outputFile3 = fopen(argv[4], "w");
     if (!outputFile1 || !outputFile2 || !outputFile3) {
-        fclose(inputFile);
+        fclose(input);
         return 1;
     }
 
     // Build the binary tree from the input file
-    Node *root = buildTree(inputFile);
+    Node *root = buildTree(input);
 
     // Output pre-order traversal to first output file
     preorderTraversal(root, outputFile1);
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 
     // Clean up
     freeTree(root);
-    fclose(inputFile);
+    fclose(input);
     fclose(outputFile1);
     fclose(outputFile2);
     fclose(outputFile3);
@@ -77,12 +77,12 @@ Node *createNode(int label, int width, int height) {
 }
 
 // Builds the tree from input file (post-order traversal)
-Node *buildTree(FILE *inputFile) {
+Node *buildTree(FILE *input) {
     Node *stack[1000];  // Assume a maximum of 1000 nodes for simplicity
     int stackTop = -1;
     char line[20];
 
-    while (fgets(line, sizeof(line), inputFile)) {
+    while (fgets(line, sizeof(line), input)) {
         if (line[0] == 'H' || line[0] == 'V') {
             Node *node = createNode(0, 0, 0);
             node->type = line[0];
